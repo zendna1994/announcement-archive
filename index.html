@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEN-DNA | Announcement Archive</title>
+    <style>
+        :root {
+            --loyola-blue: #0b3c8a;
+            --accent-blue: #2563EB;
+            --primary-dark: #0F172A;
+            --accent-light: #f0f4f8;
+            --text-dark: #2d3436;
+            --bg-gradient: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+        }
+
+        body {
+            font-family: "Inter", "Times New Roman", Times, serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            margin: 0; padding: 20px;
+            color: #1E293B;
+        }
+
+        /* --- BRANDING SECTION --- */
+        .top-branding {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .top-branding img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--loyola-blue);
+            padding: 4px;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .top-branding h1 {
+            margin: 15px 0 5px 0;
+            font-size: 1.6rem;
+            color: var(--primary-dark);
+            font-weight: 900;
+        }
+        .top-branding p {
+            margin: 0;
+            font-weight: 800;
+            color: #64748B;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .container {
+            max-width: 1100px; 
+            margin: auto;
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px);
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        h2 { 
+            text-align: center; color: var(--loyola-blue); 
+            font-size: 1.5rem; text-transform: none; letter-spacing: 0.5px;
+            margin-bottom: 20px; border-bottom: 2px solid var(--accent-light);
+            padding-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .top-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        #searchInput { 
+            flex-grow: 1; padding: 12px; border: 1.5px solid #e0e0e0;
+            border-radius: 10px; font-size: 14px; outline: none;
+        }
+        .filter-toggle { 
+            padding: 10px 16px; background: var(--loyola-blue); color: white;
+            border: none; border-radius: 10px; cursor: pointer; font-size: 18px;
+        }
+
+        .filter-options { 
+            display: none; flex-wrap: wrap; gap: 10px; padding: 15px; 
+            background: var(--accent-light); border-radius: 12px; margin-bottom: 20px; 
+        }
+        .filter-options select { padding: 10px; border: 1px solid #ccc; border-radius: 8px; flex: 1; min-width: 140px; }
+
+        /* Card-Style Scroll Container */
+        .archive-list {
+            max-height: 600px; overflow-y: auto; padding-right: 10px;
+        }
+
+        .ann-card {
+            background: #fff; border: 1px solid #edf2f7;
+            border-left: 5px solid var(--loyola-blue);
+            margin-bottom: 15px; padding: 20px; border-radius: 12px;
+            display: grid; grid-template-columns: 120px 1fr 140px 100px;
+            align-items: center; gap: 15px;
+            transition: transform 0.2s;
+        }
+        .ann-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+        .c-date { 
+            font-weight: bold; color: var(--loyola-blue); font-size: 14px; 
+            text-align: center; background: #eef2f7; padding: 8px; 
+            border-radius: 12px; border: 1px solid #d1d9e6;
+        }
+
+        .c-title { font-weight: 800; font-size: 16px; color: #000; margin-bottom: 6px; display: block; }
+        .c-desc { font-size: 14.5px; color: #4A5568; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+        .c-from { font-size: 13px; font-weight: bold; color: #718096; text-align: center; background: #f8fafc; padding: 5px; border-radius: 6px; }
+        
+        .c-link { 
+            color: var(--accent-blue); font-weight: bold; text-decoration: none; 
+            font-size: 13px; display: inline-block; margin-top: 12px; 
+        }
+        .c-link:hover { text-decoration: underline; }
+
+        .btn-print { 
+            background: var(--loyola-blue); color: white; border: none;
+            padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;
+            font-size: 13px; width: 100%; transition: opacity 0.2s;
+        }
+        .btn-print:hover { opacity: 0.9; }
+
+        #loadMoreBtn { 
+            display: block; width: 100%; max-width: 300px; margin: 30px auto; 
+            padding: 15px; background: var(--loyola-blue); color: white; 
+            border: none; border-radius: 50px; cursor: pointer; font-weight: bold; 
+        }
+
+        .main-footer {
+            text-align: center; margin-top: 30px; padding-bottom: 10px;
+            font-size: 0.85rem; color: #64748B; font-weight: 600;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .ann-card { grid-template-columns: 1fr; gap: 15px; text-align: center; }
+            .c-date { width: fit-content; margin: 0 auto; }
+            .c-desc { text-align: left; }
+            .btn-print { padding: 15px; font-size: 15px; }
+        }
+
+        /* OFFICIAL PRINT TEMPLATE */
+        #printArea { display: none; }
+        @media print {
+            html, body { background: white !important; margin: 0; padding: 0; }
+            .top-branding, .container, .main-footer { display: none !important; }
+            #printArea { display: block !important; padding: 20px; }
+            .p-header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
+            .p-header img { width: 80px; height: 80px; border-radius: 50%; }
+            .p-college { font-size: 24px; font-weight: bold; display: block; }
+            .p-dept { font-size: 18px; font-weight: bold; display: block; margin: 5px 0; }
+            .p-notice { text-align: center; text-decoration: underline; font-size: 26px; font-weight: bold; margin: 30px 0; }
+            .p-date { text-align: right; font-weight: bold; margin-bottom: 20px; }
+            .p-title { text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 20px; }
+            .p-desc { line-height: 1.8; font-size: 16px; text-align: justify; }
+            .p-footer { position: fixed; bottom: 0; width: 100%; text-align: center; border-top: 1px solid #000; padding-top: 10px; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-branding">
+    <a href="https://azbtweb.wixsite.com/zen-dna" target="_blank">
+        <img src="https://static.wixstatic.com/media/e98a4d_b935ab57540b41bdb320efa88b5e69b1~mv2.png" alt="Logo">
+    </a>
+    <h1>ZOOLOGY E - LEARNING NETWORK</h1>
+    <p>Departmental Nurturing Academics</p>
+</div>
+
+<div class="container">
+    <h2>Announcement Archive</h2>
+
+    <div class="top-bar">
+        <input type="text" id="searchInput" placeholder="Search archive notices..." onkeyup="applyFilters()">
+        <button class="filter-toggle" onclick="toggleFilters()" title="Filters">⚙️</button>
+    </div>
+
+    <div id="filterOptions" class="filter-options">
+        <select id="filterYear" onchange="applyFilters()"><option value="">All Years</option></select>
+        <select id="filterMonth" onchange="applyFilters()">
+            <option value="">All Months</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+        <select id="filterLabel" onchange="applyFilters()"><option value="">All Departments</option></select>
+        <button onclick="resetFilters()" style="cursor:pointer; border-radius:8px; border:none; padding:10px; background:#CBD5E1; font-weight:bold;">Reset</button>
+    </div>
+    
+    <div class="archive-list" id="archiveContainer"></div>
+    <button id="loadMoreBtn" onclick="renderMore()">Load More Notices</button>
+</div>
+
+<footer class="main-footer">
+    © 2026 by ZEN - DNA
+</footer>
+
+<div id="printArea"></div>
+
+<script>
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTgmOyWGBYAOIQwOpIEVPb0G5SgYrx_VbkhmB5U0-5PxIT4yACse95T35IwK-_CSWB-n0Y9622eBn3c/pub?output=csv";
+    let masterData = [];
+    let filteredData = [];
+    let showCount = 20;
+    let userIPInfo = "";
+
+    fetch('https://api.ipify.org?format=json').then(x=>x.json()).then(y=> {
+        userIPInfo = y.ip + " | " + new Date().toLocaleString();
+    });
+
+    function cleanT(t) { return t ? t.replace(/\\n/g, "\n").replace(/\/n/g, "\n") : ""; }
+    
+    function toggleFilters() {
+        const f = document.getElementById('filterOptions');
+        f.style.display = (f.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = "";
+        document.getElementById('filterYear').value = "";
+        document.getElementById('filterMonth').value = "";
+        document.getElementById('filterLabel').value = "";
+        applyFilters();
+    }
+
+    async function init() {
+        try {
+            const r = await fetch(CSV_URL);
+            const t = await r.text();
+            const rows = t.split(/\r?\n/).slice(1);
+            const labels = new Set(), years = new Set();
+
+            masterData = rows.map(row => {
+                const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/"/g,"").trim());
+                if(c[0] && c[2]) {
+                    const p = c[0].split("-");
+                    if(p[2]) years.add(p[2]);
+                    if(c[6]) labels.add(c[6]);
+                    return { date: c[0], month: p[1], year: p[2], title: c[2], desc: c[3], link: c[4], lab: c[6] };
+                }
+            }).filter(i => i).reverse();
+
+            const yr = document.getElementById('filterYear');
+            Array.from(years).sort().reverse().forEach(y => yr.innerHTML += `<option value="${y}">${y}</option>`);
+            const lb = document.getElementById('filterLabel');
+            Array.from(labels).sort().forEach(l => lb.innerHTML += `<option value="${l}">${l}</option>`);
+
+            applyFilters();
+        } catch(e) { console.error("Data Load Error", e); }
+    }
+
+    function applyFilters() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        const y = document.getElementById('filterYear').value;
+        const m = document.getElementById('filterMonth').value;
+        const l = document.getElementById('filterLabel').value;
+
+        filteredData = masterData.filter(i => {
+            const matchSearch = (i.title.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
+            const matchYear = (y === "" || i.year === y);
+            const matchMonth = (m === "" || i.month === m);
+            const matchLab = (l === "" || i.lab === l);
+            return matchSearch && matchYear && matchMonth && matchLab;
+        });
+
+        showCount = 20;
+        renderCards();
+    }
+
+    function renderCards() {
+        const container = document.getElementById('archiveContainer');
+        container.innerHTML = "";
+        if(filteredData.length === 0) {
+            container.innerHTML = "<p style='text-align:center; padding:20px; color:#666;'>No notices found matching your criteria.</p>";
+        } else {
+            filteredData.slice(0, showCount).forEach(i => {
+                const div = document.createElement('div');
+                div.className = 'ann-card';
+                div.innerHTML = `
+                    <div class="c-date">${i.date}</div>
+                    <div>
+                        <span class="c-title">${cleanT(i.title)}</span>
+                        <div class="c-desc">${cleanT(i.desc)}</div>
+                        ${i.link ? `<a href="${i.link}" target="_blank" class="c-link">Attached Document 📎</a>` : ""}
+                    </div>
+                    <div class="c-from">${i.lab || '-'}</div>
+                    <div><button class="btn-print" onclick="doPrint('${encodeURIComponent(JSON.stringify(i))}')">Print</button></div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        document.getElementById('loadMoreBtn').style.display = (showCount >= filteredData.length) ? 'none' : 'block';
+    }
+
+    function renderMore() { showCount += 20; renderCards(); }
+
+    function doPrint(encoded) {
+        const i = JSON.parse(decodeURIComponent(encoded));
+        const printArea = document.getElementById('printArea');
+        
+        printArea.innerHTML = `
+            <div class="p-header">
+                <img src="https://static.wixstatic.com/media/e98a4d_b935ab57540b41bdb320efa88b5e69b1~mv2.png">
+                <span class="p-college">Loyola College (Autonomous), Chennai - 34.</span>
+                <span class="p-dept">PG & Research Department of Advanced Zoology and Biotechnology</span>
+                <span class="p-web">Zoology E-learning Network - Departmental Nurturing Academics</span>
+            </div>
+            <div class="p-notice">NOTICE</div>
+            <div class="p-date">Date: ${i.date}</div>
+            <div class="p-title">${i.title}</div>
+            <div class="p-desc">${cleanT(i.desc)}</div>
+            ${i.link ? `<div style="margin-top:30px; font-weight:bold; font-style:italic; border-top:1px solid #eee; padding-top:10px;">Attached Document Link:<br><small style="font-weight:normal;">${i.link}</small></div>` : ""}
+            <div class="p-footer">
+                <span>Zoology E-learning Network is the digital Gateway of AZ-BT, Loyola College.</span><br>
+                <span>https://azbtweb.wixsite.com/zen-dna</span><br>
+                <span style="color:#777; font-size:9px;">${userIPInfo}</span>
+            </div>
+        `;
+
+        setTimeout(() => { window.print(); }, 250);
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>
